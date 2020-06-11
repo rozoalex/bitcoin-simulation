@@ -6,9 +6,14 @@ import static utils.Helper.mine;
 
 public class Node implements Runnable{
 
+    // The public key hash of the person who runs this node
     private String pubKeyHash;
 
+    // each node stores a copy of the block chain
     private BlockChain blockChain;
+
+    // The network this node is in
+    private Network network;
 
     public Node (String pubKeyHash) throws NoSuchAlgorithmException {
         this.pubKeyHash = pubKeyHash;
@@ -34,23 +39,42 @@ public class Node implements Runnable{
                 lastBlock.getHash(),
                 lastBlock.getHashAlgorithm()
         );
-        mine(nextBlock, "0000");
-        if (this.blockChain.getLastBlock() == lastBlock) {
-            // This node won the race, tell all nodes
-            broadcast(nextBlock);
-            blockChain.add(nextBlock);
+
+        // mine this block while
+        // 1) hash not start with the pattern,
+        // 2) no one else mined the next block yet
+        while (!nextBlock.getHash().startsWith("0000")
+                && this.blockChain.getLastBlock() == lastBlock) {
+            nextBlock.increaseNonce();
+            nextBlock.validateHash();
         }
 
+        if (this.blockChain.getLastBlock() == lastBlock) {
+            // This node won the race, tell all nodes this node found the next block
+            this.network.broadcastNextBlock(nextBlock);
+        }
     }
 
     /**
-     * This node is the first to generate the next block
-     * tell all nodes
+     * Receive the latest block over the network
      *
      * @param nextBlock
      */
-    private void broadcast(Block nextBlock) {
-        // TODO
+    public void receive(Block nextBlock) {
+        // add new block to the chain only if the next block is valid
+        if (this.validateBlock(nextBlock)) {
+            this.blockChain.add(nextBlock);
+        }
+    }
+
+    /**
+     * Check if the block received is legit
+     *
+     * @param block
+     * @return
+     */
+    private boolean validateBlock(Block block) {
+        return true;
     }
 
     /**
