@@ -2,8 +2,6 @@ package utils;
 
 import java.security.NoSuchAlgorithmException;
 
-import static utils.Helper.mine;
-
 public class Node implements Runnable{
 
     // The public key hash of the person who runs this node
@@ -15,9 +13,10 @@ public class Node implements Runnable{
     // The network this node is in
     private Network network;
 
-    public Node (String pubKeyHash) throws NoSuchAlgorithmException {
+    public Node (String pubKeyHash, Network network) throws NoSuchAlgorithmException {
         this.pubKeyHash = pubKeyHash;
         this.blockChain = new BlockChain();
+        this.network = network;
     }
 
     public void run() {
@@ -33,7 +32,7 @@ public class Node implements Runnable{
     private void createNewBlock() {
         Block lastBlock = this.blockChain.getLastBlock();
         Block nextBlock = new Block(
-                lastBlock.getNumber(),
+                lastBlock.getNumber() + 1,
                 0l,
                 this.createCoinbaseTransaction(),
                 lastBlock.getHash(),
@@ -43,7 +42,7 @@ public class Node implements Runnable{
         // mine this block while
         // 1) hash not start with the pattern,
         // 2) no one else mined the next block yet
-        while (!nextBlock.getHash().startsWith("0000")
+        while (!nextBlock.getHash().startsWith("00000")
                 && this.blockChain.getLastBlock() == lastBlock) {
             nextBlock.increaseNonce();
             nextBlock.validateHash();
