@@ -3,8 +3,12 @@ package utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import lombok.Data;
 
-public class Block {
+/**
+ * Data Structure of a Block
+ */
+public @Data class Block {
     // number of this block in the whole chain
     private long number;
 
@@ -43,10 +47,6 @@ public class Block {
 
     public void increaseNonce() {
         this.nonce += 1;
-    }
-
-    public String getHash() {
-        return this.hash;
     }
 
     @Override

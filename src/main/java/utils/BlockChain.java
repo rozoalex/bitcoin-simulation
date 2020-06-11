@@ -3,11 +3,27 @@ package utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
 
-public class BlockChain {
+import static utils.Helper.GENESIS_BLOCK_HASH;
 
-    private LinkedList<Block> blocksList;
+/**
+ * Data Structure of blockchain
+ * a list of blocks
+ */
+public class BlockChain {
+    private SHA256 hashAlgorithm;
+
+    private LinkedList<Block> blocksList = new LinkedList<Block>();
+
+    /**
+     * Init a block chain, hard coded the first block
+     */
+    public BlockChain() throws NoSuchAlgorithmException {
+        this.hashAlgorithm = new SHA256();
+        blocksList.add(new Block(0l, 0l, "demo", GENESIS_BLOCK_HASH, this.hashAlgorithm));
+    }
 
     /**
      * Add a new block to this block chain
@@ -19,6 +35,10 @@ public class BlockChain {
 
     public int size() {
         return blocksList.size();
+    }
+
+    public Block getLastBlock(){
+        return this.blocksList.getLast();
     }
 
     @Override

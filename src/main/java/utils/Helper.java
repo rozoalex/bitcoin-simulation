@@ -1,6 +1,9 @@
 package utils;
 
 public class Helper {
+    // hard coded previous hash for the first block
+    public static final String GENESIS_BLOCK_HASH = "0000000000000000000000000000000000000000000000000000000000000000";
+
     public static String bytesToHex(byte[] hash) {
         StringBuilder hexString = new StringBuilder();
         for (int i = 0; i < hash.length; i++) {
