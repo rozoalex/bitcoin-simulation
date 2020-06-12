@@ -2,6 +2,8 @@ package utils;
 
 import java.security.NoSuchAlgorithmException;
 
+import static utils.Helper.MINING_TARGET_PATTERN;
+
 public class Node implements Runnable{
 
     // The public key hash of the person who runs this node
@@ -35,14 +37,13 @@ public class Node implements Runnable{
                 lastBlock.getNumber() + 1,
                 0l,
                 this.createCoinbaseTransaction(),
-                lastBlock.getHash(),
-                lastBlock.getHashAlgorithm()
+                lastBlock.getHash()
         );
 
         // mine this block while
         // 1) hash not start with the pattern,
         // 2) no one else mined the next block yet
-        while (!nextBlock.getHash().startsWith("00000")
+        while (!nextBlock.getHash().startsWith(MINING_TARGET_PATTERN)
                 && this.blockChain.getLastBlock() == lastBlock) {
             nextBlock.increaseNonce();
             nextBlock.validateHash();

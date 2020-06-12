@@ -3,8 +3,7 @@ package utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.security.NoSuchAlgorithmException;
-import java.util.LinkedList;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import static utils.Helper.GENESIS_BLOCK_HASH;
 
@@ -13,16 +12,13 @@ import static utils.Helper.GENESIS_BLOCK_HASH;
  * a list of blocks
  */
 public class BlockChain {
-    private SHA256 hashAlgorithm;
-
-    private LinkedList<Block> blocksList = new LinkedList<Block>();
+    private LinkedBlockingDeque<Block> blocksList = new LinkedBlockingDeque<Block>();
 
     /**
      * Init a block chain, hard coded the first block
      */
-    public BlockChain() throws NoSuchAlgorithmException {
-        this.hashAlgorithm = new SHA256();
-        blocksList.add(new Block(0l, 0l, "demo", GENESIS_BLOCK_HASH, this.hashAlgorithm));
+    public BlockChain() {
+        blocksList.add(new Block(0l, 0l, "demo", GENESIS_BLOCK_HASH));
     }
 
     /**

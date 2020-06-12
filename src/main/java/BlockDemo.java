@@ -1,7 +1,5 @@
 import utils.Block;
 
-import utils.SHA256;
-
 import static utils.Helper.mine;
 
 public class BlockDemo {
@@ -10,12 +8,11 @@ public class BlockDemo {
         String pattern = "0000";
         System.out.println("DEMO: Generate a chain of blocks");
         try {
-            SHA256 hashAlgorithm = new SHA256();
             long blockNumber = 0l;
             String previousHash = "0000000000000000000000000000000000000000000000000000000000000000";
             while (blockNumber < numberOfBlocks) {
                 // Initialize the block
-                Block block = new Block(blockNumber, 0l, "demo", previousHash, hashAlgorithm);
+                Block block = new Block(blockNumber, 0l, "demo", previousHash);
                 long startTime = System.currentTimeMillis();
                 // Do the mining
                 mine(block, pattern);

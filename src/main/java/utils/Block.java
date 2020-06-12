@@ -5,6 +5,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import lombok.Data;
 
+import static org.apache.commons.codec.digest.DigestUtils.sha256Hex;
+
 /**
  * Data Structure of a Block
  */
@@ -24,25 +26,20 @@ public @Data class Block {
     // Hash of the previous block
     private String previousHash;
 
-    // The algorithm used for generating the hash
-    private SHA256 hashAlgorithm;
-
-    public Block(long number, long nonce, String data, String previousHash, SHA256 hashAlgorithm) {
+    public Block(long number, long nonce, String data, String previousHash) {
         this.nonce = nonce;
         this.number = number;
         this.data = data;
-        this.hashAlgorithm = hashAlgorithm;
         this.previousHash = previousHash;
         this.validateHash();
     }
 
     /**
      * re-calculate the hash for this block from number, nonce, data, and hash of the previous block
+     * with sha256 algorithm
      */
     public void validateHash(){
-        this.hash = hashAlgorithm.hash(
-                String.format("%d\n%d\n%s\n%s", number, nonce, data, previousHash)
-        );
+        this.hash = sha256Hex(String.format("%d\n%d\n%s\n%s", number, nonce, data, previousHash));
     }
 
     public void increaseNonce() {
