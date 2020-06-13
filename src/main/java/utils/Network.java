@@ -4,6 +4,11 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import static utils.Helper.writeToFile;
 
 /**
  * This simulate the whole network of nodes
@@ -24,6 +29,30 @@ public class Network {
 
     public void addNode(Node node) {
         nodes.add(node);
+    }
+
+
+    /**
+     * Assign each node to a thread to mimic real-life scenario
+     * where each node runs on different people's machine
+     *
+     * @param forSeconds run network for this many seconds
+     */
+    public void runNetwork(int forSeconds) throws InterruptedException {
+        System.out.println("Run " + this.nodes.size() + " nodes for " + forSeconds + "s." );
+        ExecutorService threadPool = Executors.newFixedThreadPool(this.nodes.size());
+        for (Node node : this.nodes)
+            threadPool.execute(node);
+
+        TimeUnit.SECONDS.sleep(forSeconds);
+
+        // write the blockchain in each nodes to files in output folder
+        for (Node node : this.nodes) {
+            writeToFile(
+                    node.getPubKeyHash() + ".json",
+                    node.getBlockChain().toString()
+            );
+        }
     }
 
     public Node addNewNode(String pubkeyHash) throws NoSuchAlgorithmException {

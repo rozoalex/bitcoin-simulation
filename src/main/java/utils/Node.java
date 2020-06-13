@@ -1,10 +1,12 @@
 package utils;
 
+import lombok.Data;
+
 import java.security.NoSuchAlgorithmException;
 
 import static utils.Helper.MINING_TARGET_PATTERN;
 
-public class Node implements Runnable{
+public @Data class Node implements Runnable{
 
     // The public key hash of the person who runs this node
     private String pubKeyHash;

@@ -1,0 +1,1 @@
+This folder stores all runtime output files for testing purpose. 
