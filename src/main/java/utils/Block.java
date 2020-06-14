@@ -8,7 +8,7 @@ import lombok.Data;
 import static org.apache.commons.codec.digest.DigestUtils.sha256Hex;
 
 /**
- * Data Structure of a Block
+ * The general Data Structure of a Block
  */
 public @Data class Block {
     // number of this block in the whole chain
