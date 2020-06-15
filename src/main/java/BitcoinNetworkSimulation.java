@@ -3,7 +3,10 @@ import networks.Node;
 
 import java.security.NoSuchAlgorithmException;
 
-public class NetworkDemo {
+/**
+ * Simulate the bitcoin network
+ */
+public class BitcoinNetworkSimulation {
     public static void main(String[] args) throws NoSuchAlgorithmException, InterruptedException {
         Network network = new Network();
 

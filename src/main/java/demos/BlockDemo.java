@@ -1,3 +1,5 @@
+package demos;
+
 import datastructures.Block;
 
 import static utils.Helper.mine;
