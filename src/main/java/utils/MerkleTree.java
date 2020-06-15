@@ -6,12 +6,14 @@ import static org.apache.commons.codec.digest.DigestUtils.sha256Hex;
  * Data structure Merkle Tree
  */
 public class MerkleTree {
-    private MerkleTreeNode root;
-
-    private MerkleTreeNode last;
+    private MerkleTreeNode root = new MerkleTreeNode();
 
     public int depth() {
         return root.depth;
+    }
+
+    public int size() {
+        return 0;
     }
 
     public String getMerkleRoot() {
