@@ -1,4 +1,4 @@
-import utils.Block;
+import datastructures.Block;
 
 import static utils.Helper.mine;
 

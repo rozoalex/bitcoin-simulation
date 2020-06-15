@@ -1,5 +1,5 @@
 import org.junit.jupiter.api.Test;
-import utils.MerkleTree;
+import datastructures.MerkleTree;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,4 +1,4 @@
-package utils;
+package datastructures;
 
 import static org.apache.commons.codec.digest.DigestUtils.sha256Hex;
 

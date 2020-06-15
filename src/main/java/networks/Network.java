@@ -1,4 +1,6 @@
-package utils;
+package networks;
+
+import datastructures.Block;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -11,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 import static utils.Helper.writeToFile;
 
 /**
- * This simulate the whole network of nodes
+ * Simulate the whole network of nodes
  * it serves as a communication broker for all nodes
  *
  */

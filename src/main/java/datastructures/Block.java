@@ -1,4 +1,4 @@
-package utils;
+package datastructures;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

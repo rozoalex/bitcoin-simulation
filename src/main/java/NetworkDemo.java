@@ -1,5 +1,5 @@
-import utils.Network;
-import utils.Node;
+import networks.Network;
+import networks.Node;
 
 import java.security.NoSuchAlgorithmException;
 

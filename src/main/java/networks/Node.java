@@ -1,11 +1,18 @@
-package utils;
+package networks;
 
 import lombok.Data;
+import datastructures.Block;
+import datastructures.BlockChain;
 
 import java.security.NoSuchAlgorithmException;
 
 import static utils.Helper.MINING_TARGET_PATTERN;
 
+/**
+ * Simulate a Node in bitcoin network
+ * which is a program trying to generate new blocks
+ * at the same time verifying transactions
+ */
 public @Data class Node implements Runnable{
 
     // The public key hash of the person who runs this node
@@ -88,8 +95,4 @@ public @Data class Node implements Runnable{
         // TODO: implement transaction
         return this.pubKeyHash;
     }
-
-
-
-
 }
