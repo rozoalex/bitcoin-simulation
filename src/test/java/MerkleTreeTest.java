@@ -1,10 +1,13 @@
-import org.junit.jupiter.api.Test;
 import datastructures.MerkleTree;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Test basic functionality of the Merkle Tree implementation
@@ -12,8 +15,8 @@ import static org.junit.Assert.*;
 public class MerkleTreeTest {
 
     @Test
-    public void testMerkleTreeSize() {
-        MerkleTree merkleTree = new MerkleTree();
+    public void testSize() {
+        MerkleTree<String> merkleTree = new MerkleTree<>();
         // construct tree with randomSize number of nodes
         for (int i = 0; i < 100; i++) {
             merkleTree.add("test");
@@ -23,10 +26,10 @@ public class MerkleTreeTest {
     }
 
     @Test
-    public void testMerkleTreeDepth() {
+    public void testDepth() {
         // test 10 times
         for (int time = 0; time < 10; time++) {
-            MerkleTree merkleTree = new MerkleTree();
+            MerkleTree<String> merkleTree = new MerkleTree<>();
             // rand number between 10 to 100
             int randomSize = (int)(Math.random() * 90) + 10;
             // construct tree with randomSize number of nodes
@@ -37,14 +40,28 @@ public class MerkleTreeTest {
     }
 
     @Test
-    public void testMerkleTreeHash() {
-        MerkleTree merkleTree = new MerkleTree();
+    public void testHashChanging() {
+        MerkleTree<String> merkleTree = new MerkleTree<>();
         Set<String> merkleRootSet = new HashSet<>();
         for (int i = 0; i < 100; i++) {
             merkleTree.add("test");
             // The merkle root should be a hash that never appear before as new elements are added
             assertFalse(merkleRootSet.contains(merkleTree.getMerkleRoot()));
             merkleRootSet.add(merkleTree.getMerkleRoot());
+        }
+    }
+
+    @Test
+    public void testElementsOrder() {
+        MerkleTree<String> merkleTree = new MerkleTree<>();
+        List<String> strings = new LinkedList<>();
+        // construct tree with randomSize number of nodes
+        for (int i = 0; i < 100; i++) {
+            int randomNumber = (int)(Math.random() * 100);
+            merkleTree.add(String.valueOf(randomNumber));
+            strings.add(String.valueOf(randomNumber));
+            // verify the order of the elements
+            assertEquals(merkleTree.getElementList().toString(), strings.toString());
         }
     }
 }
