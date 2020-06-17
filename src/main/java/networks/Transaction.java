@@ -7,5 +7,7 @@ package networks;
  * with specific conditions defining who can use them
  */
 public class Transaction {
-    // TODO
+    TransactionOutput[] inputs;
+    TransactionOutput[] outputs;
+    Double fees;
 }

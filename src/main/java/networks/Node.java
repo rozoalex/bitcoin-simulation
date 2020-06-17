@@ -16,7 +16,7 @@ import static utils.Helper.MINING_TARGET_PATTERN;
 public @Data class Node implements Runnable{
 
     // The public key hash of the person who runs this node
-    private String pubKeyHash;
+    private String pubKeyHashAddress;
 
     // each node stores a copy of the block chain
     private BlockChain blockChain;
@@ -25,7 +25,7 @@ public @Data class Node implements Runnable{
     private Network network;
 
     public Node (String pubKeyHash, Network network) throws NoSuchAlgorithmException {
-        this.pubKeyHash = pubKeyHash;
+        this.pubKeyHashAddress = pubKeyHash;
         this.blockChain = new BlockChain();
         this.network = network;
     }
@@ -93,6 +93,6 @@ public @Data class Node implements Runnable{
      */
     private String createCoinbaseTransaction() {
         // TODO: implement transaction
-        return this.pubKeyHash;
+        return this.pubKeyHashAddress;
     }
 }

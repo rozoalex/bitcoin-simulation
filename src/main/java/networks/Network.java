@@ -51,7 +51,7 @@ public class Network {
         // write the blockchain in each nodes to files in output folder
         for (Node node : this.nodes) {
             writeToFile(
-                    node.getPubKeyHash() + ".json",
+                    node.getPubKeyHashAddress() + ".json",
                     node.getBlockChain().toString()
             );
         }
