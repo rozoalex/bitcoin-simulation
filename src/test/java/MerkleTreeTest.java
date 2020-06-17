@@ -44,7 +44,8 @@ public class MerkleTreeTest {
         MerkleTree<String> merkleTree = new MerkleTree<>();
         Set<String> merkleRootSet = new HashSet<>();
         for (int i = 0; i < 100; i++) {
-            merkleTree.add("test");
+            // make sure the values are different
+            merkleTree.add("test" + i);
             // The merkle root should be a hash that never appear before as new elements are added
             assertFalse(merkleRootSet.contains(merkleTree.getMerkleRoot()));
             merkleRootSet.add(merkleTree.getMerkleRoot());

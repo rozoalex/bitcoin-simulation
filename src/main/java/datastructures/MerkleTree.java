@@ -2,8 +2,11 @@ package datastructures;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,7 +18,7 @@ import static org.apache.commons.codec.digest.DigestUtils.sha256Hex;
 public class MerkleTree<T> {
     private int size = 0;
 
-    private MerkleTreeNode root = new MerkleTreeNode();
+    private MerkleTreeNode root = new MerkleTreeNode(1);
 
     /**
      * distance from the root to the leaves
@@ -58,7 +61,8 @@ public class MerkleTree<T> {
             List<MerkleTreeNode> next = new LinkedList<>();
             for (MerkleTreeNode node : explore) {
                 if (node == null) continue;
-                if (node.isLeaf) {
+                if (node.depth == 0) {
+                    // add to result if depth is zero (leaf)
                     result.add(((MerkleTreeLeaf)node).element);
                 } else {
                     next.add(node.left);
@@ -72,12 +76,7 @@ public class MerkleTree<T> {
 
     @Override
     public String toString() {
-        JsonObject obj = new JsonObject();
-        obj.addProperty("size", this.size);
-        obj.addProperty("depth", this.depth());
-        obj.addProperty("tree", this.root.toString());
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        return gson.toJson(obj);
+        return this.root.toString();
     }
 
     /**
@@ -88,9 +87,8 @@ public class MerkleTree<T> {
     public void add(T element) {
         this.size++;
         if (this.size > Math.pow(2, this.depth())) {
-            MerkleTreeNode newRoot = new MerkleTreeNode();
+            MerkleTreeNode newRoot = new MerkleTreeNode(this.root.depth + 1);
             newRoot.left = this.root;
-            newRoot.depth = this.root.depth + 1;
             this.root = newRoot;
         }
         this.root.add(element);
@@ -108,17 +106,20 @@ public class MerkleTree<T> {
      *
      */
     private class MerkleTreeNode {
-        protected final boolean isLeaf = false;
         // stores the hash value
         String value;
         // distance to bottom
-        int depth = 1;
-
+        public final int depth;
+        // child nodes
         MerkleTreeNode left;
         MerkleTreeNode right;
 
+        MerkleTreeNode(int depth) {
+            this.depth = depth;
+        }
+
         boolean add(T element) {
-            if (isLeaf) {
+            if (this.depth == 0) {
                 // found the leaf
                 MerkleTreeLeaf leaf = (MerkleTreeLeaf)this;
                 // if the leaf is not new abort, else set the new element
@@ -142,9 +143,9 @@ public class MerkleTree<T> {
         }
 
         MerkleTreeNode createChildNode(int depth) {
-            MerkleTreeNode childNode = depth == 0 ? new MerkleTreeLeaf() : new MerkleTreeNode();
-            childNode.depth = depth;
-            return childNode;
+            return depth == 0 ?
+                    new MerkleTreeLeaf() :
+                    new MerkleTreeNode(depth);
         }
 
         /**
@@ -158,12 +159,10 @@ public class MerkleTree<T> {
 
         @Override
         public String toString() {
-            JsonObject obj = new JsonObject();
-            obj.addProperty("val", this.value);
-            obj.addProperty("left", this.left.toString());
-            obj.addProperty("right", this.right.toString());
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            return gson.toJson(obj);
+            GsonBuilder builder = new GsonBuilder();
+            builder.registerTypeAdapter(MerkleTreeNode.class, new MerkleTreeJsonAdapter());
+            Gson gson = builder.setPrettyPrinting().create();
+            return gson.toJson(this);
         }
     }
 
@@ -174,8 +173,10 @@ public class MerkleTree<T> {
      */
     private class MerkleTreeLeaf extends MerkleTreeNode {
         T element;
-        int depth = 0;
-        protected final boolean isLeaf = true;
+
+        MerkleTreeLeaf() {
+            super(0);
+        }
 
         /**
          * The hash value of the leaf is the string conversion of the element
@@ -184,13 +185,35 @@ public class MerkleTree<T> {
         void computeHash() {
             this.value = element.toString();
         }
+    }
+
+    /**
+     * Customized adapter for serializing the tree to json object
+     */
+    public class MerkleTreeJsonAdapter extends TypeAdapter<MerkleTreeNode> {
+        @Override
+        public void write(JsonWriter jsonWriter, MerkleTreeNode node) throws IOException {
+            if (node == null) {
+                jsonWriter.nullValue();
+                return;
+            }
+            jsonWriter.beginObject();
+            jsonWriter.name("val").value(node.value);
+            jsonWriter.name("depth").value(node.depth);
+            if (node.depth > 0) {
+                // add left & right node, only if the node is a leaf
+                jsonWriter.name("left");
+                write(jsonWriter, node.left);
+                jsonWriter.name("right");
+                write(jsonWriter, node.right);
+            }
+            jsonWriter.endObject();
+        }
 
         @Override
-        public String toString() {
-            JsonObject obj = new JsonObject();
-            obj.addProperty("val", this.value);
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            return gson.toJson(obj);
+        public MerkleTreeNode read(JsonReader jsonReader) throws IOException {
+            // TODO: implement this to convert a json to a tree, IF NEEDED
+            return null;
         }
     }
 }
