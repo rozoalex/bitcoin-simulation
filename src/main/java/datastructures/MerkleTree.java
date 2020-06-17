@@ -188,9 +188,10 @@ public class MerkleTree<T> {
     }
 
     /**
+     * Helper class
      * Customized adapter for serializing the tree to json object
      */
-    public class MerkleTreeJsonAdapter extends TypeAdapter<MerkleTreeNode> {
+    private class MerkleTreeJsonAdapter extends TypeAdapter<MerkleTreeNode> {
         @Override
         public void write(JsonWriter jsonWriter, MerkleTreeNode node) throws IOException {
             if (node == null) {
