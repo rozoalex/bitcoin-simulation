@@ -2,11 +2,9 @@ package networks;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
-
-import java.io.IOException;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import lombok.Getter;
 
 /**
  * Simulate a transaction
@@ -15,36 +13,48 @@ import java.io.IOException;
  * with specific conditions defining who can use them
  */
 public class Transaction {
-    private TransactionOutput[] inputs;
-    private TransactionOutput[] outputs;
-    private Double fees;
-    
+    @Getter private TransactionOutput[] inputs;
+    private double inputSum;
+    @Getter private TransactionOutput[] outputs;
+    private double outputSum;
+    @Getter private Double fees;
 
+    private Gson jsonPrettyBuilder = new GsonBuilder().setPrettyPrinting().create();
+
+
+    public Transaction(TransactionOutput[] inputs, TransactionOutput[] outputs) {
+        this.inputs = inputs;
+        this.outputs = outputs;
+        this.inputSum = 0;
+        for (TransactionOutput input : inputs) {
+            inputSum += input.getValue();
+        }
+        this.outputSum = 0;
+        for (TransactionOutput output : outputs) {
+            outputSum += output.getValue();
+        }
+        this.fees = inputSum - outputSum;
+    }
 
     /*
         Helper functions and classes
         Not related to algorithm
      */
-    private TransactionJsonAdapter jsonAdapter = new TransactionJsonAdapter();
 
     @Override
     public String toString() {
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(Transaction.class, this.jsonAdapter);
-        Gson gson = builder.setPrettyPrinting().create();
-        return gson.toJson(this);
-    }
-
-    private class TransactionJsonAdapter extends TypeAdapter<Transaction> {
-
-        @Override
-        public void write(JsonWriter jsonWriter, Transaction transaction) throws IOException {
-            // TODO
-        }
-
-        @Override
-        public Transaction read(JsonReader jsonReader) throws IOException {
-            return null;
-        }
+        JsonObject obj = new JsonObject();
+        JsonArray inputJsonArray = new JsonArray();
+        for (TransactionOutput input : inputs)
+            inputJsonArray.add(input.toJsonObject());
+        JsonArray outputJsonArray = new JsonArray();
+        for (TransactionOutput output : outputs)
+            outputJsonArray.add(output.toJsonObject());
+        obj.addProperty("input sum", this.inputSum);
+        obj.add("input", inputJsonArray);
+        obj.addProperty("output sum", this.outputSum);
+        obj.add("output", outputJsonArray);
+        obj.addProperty("fees", this.fees);
+        return jsonPrettyBuilder.toJson(obj);
     }
 }

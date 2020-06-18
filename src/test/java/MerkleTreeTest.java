@@ -21,7 +21,7 @@ public class MerkleTreeTest {
         for (int i = 0; i < 100; i++) {
             merkleTree.add("test");
             // size should increase 1 at a time
-            assertEquals(merkleTree.size(), i+1);
+            assertEquals(merkleTree.getSize(), i+1);
         }
     }
 

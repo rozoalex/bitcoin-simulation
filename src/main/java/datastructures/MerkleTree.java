@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -16,8 +17,9 @@ import static org.apache.commons.codec.digest.DigestUtils.sha256Hex;
  * Data structure Merkle Tree
  */
 public class MerkleTree<T> {
-    private int size = 0;
-
+    // Number of element in the tree
+    @Getter private int size = 0;
+    // tree root
     private MerkleTreeNode root = new MerkleTreeNode(1);
 
     /**
@@ -27,15 +29,6 @@ public class MerkleTree<T> {
      */
     public int depth() {
         return this.root.depth;
-    }
-
-    /**
-     * Number of elements in the tree
-     *
-     * @return
-     */
-    public int size() {
-        return this.size;
     }
 
     /**

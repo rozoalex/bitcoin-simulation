@@ -63,6 +63,15 @@ public class Network {
         return node;
     }
 
+    /**
+     * Broad cast a new transaction to all nodes
+     *
+     * @param transaction
+     */
+    public void broadcastTransaction(Transaction transaction) {
+        // TODO
+    }
+
     public void broadcastNextBlock(Block nextBlock) {
         long currentTime = System.currentTimeMillis();
         System.out.println("Next block found " + nextBlock

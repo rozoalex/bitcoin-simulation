@@ -3,15 +3,16 @@ package networks;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import lombok.Getter;
 
 public class TransactionOutput {
-    private String pubKeyHashAddress;
-    private String pkScript;
-    private String sigScript;
-    private Double value;
-    private Boolean isSpent;
+    @Getter private String pubKeyHashAddress;
+    @Getter private String pkScript;
+    @Getter private String sigScript;
+    @Getter private Double value;
+    @Getter private Boolean isSpent;
 
-
+    private Gson jsonPrettyBuilder = new GsonBuilder().setPrettyPrinting().create();
 
     // Helper functions
     public JsonObject toJsonObject() {
@@ -19,14 +20,13 @@ public class TransactionOutput {
         obj.addProperty("address", this.pubKeyHashAddress);
         obj.addProperty("PkScript", this.pkScript);
         if (this.sigScript != null) obj.addProperty("SigScript", this.sigScript);
-        obj.addProperty("value", this.value + " BTC");
+        obj.addProperty("value", this.value);
         obj.addProperty("status", this.isSpent ? "spent" : "unspent");
         return obj;
     }
 
     @Override
     public String toString() {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        return gson.toJson(this.toJsonObject());
+        return jsonPrettyBuilder.toJson(this.toJsonObject());
     }
 }

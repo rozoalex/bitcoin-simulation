@@ -86,6 +86,10 @@ public @Data class Node implements Runnable{
         return true;
     }
 
+    private boolean validateTransaction(Transaction transaction) {
+        return true;
+    }
+
     /**
      *
      *
